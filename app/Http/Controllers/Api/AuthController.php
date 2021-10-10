@@ -50,11 +50,17 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request){
-        $user = User::where('email', $request->email)->first();
 
-        if ($user) {
-            $user->tokens()->delete();
-        }
+        // Not secure
+//        $user = User::where('email', $request->email)->first();
+//
+//        if ($user) {
+//            $user->tokens()->delete();
+//        }
+
+        //Better
+
+        auth()->user()->tokens()->delete();
 
         return response()->noContent();
     }
