@@ -18,8 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::get('categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
-//Route::get('categories/{category}', [\App\Http\Controllers\Api\CategoryController::class, 'show']);
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
 
@@ -31,21 +29,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
 });
 
-
-Route::post('/api/sanctum/token', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-        'device_name' => 'required',
-    ]);
-
-    $user = \App\Models\User::where('email', $request->email)->first();
-
-    if (! $user || ! \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
-        throw \Illuminate\Validation\ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
-    }
-
-    return $user->createToken($request->device_name)->plainTextToken;
-});
+Route::post('/auth/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+Route::post('/auth/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
+Route::post('/auth/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
